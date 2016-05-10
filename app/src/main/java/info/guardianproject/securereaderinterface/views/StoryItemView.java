@@ -284,7 +284,7 @@ public class StoryItemView implements OnUpdateListener, OnMediaLoadedListener
 			{
 				try
 				{
-					Bidi bidi = new Bidi(mItem.getCleanMainContent(), Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
+					Bidi bidi = new Bidi(mItem.getCleanMainContent().toString(), Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
 					if (!bidi.baseIsLeftToRight())
 						bReverse = true;
 				}
