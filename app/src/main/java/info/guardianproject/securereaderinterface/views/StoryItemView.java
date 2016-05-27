@@ -292,6 +292,10 @@ public class StoryItemView implements OnUpdateListener, OnMediaLoadedListener
 				{
 					// Content probably null for some reason.
 				}
+				catch (NullPointerException e)
+				{
+					// Content probably null for some reason.
+				}
 			}
 			else if (App.getSettings().readerSwipeDirection() == ReaderSwipeDirection.Ltr)
 			{
