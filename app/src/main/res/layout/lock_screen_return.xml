@@ -9,7 +9,9 @@
     android:focusableInTouchMode="true"
     android:gravity="top|center_horizontal"
     android:orientation="vertical"
-    android:padding="20dp" >
+    android:padding="20dp"
+    android:filterTouchesWhenObscured="true"
+    >
                 
         <FrameLayout
             android:layout_width="match_parent"
