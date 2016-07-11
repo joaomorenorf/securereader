@@ -141,7 +141,10 @@ BBG will make every effort to review and post comments within 48 hours, although
   <string name="add_feed_collapse">بستن</string>
   <string name="add_feed_not_loaded">اطلاعات خوراک، دریافت نشد</string>
   <string name="add_feed_error_loading">نتوانستیم این خوراک را بگیریم. بررسی کنید که آدرس خوراک RSS صحیح است.‏</string>
+  <string name="settings_heading_proxy">پروکسی</string>
   <string name="settings_tor_require">نیاز به تور</string>
+  <string name="settings_proxy_tor">تور</string>
+  <string name="settings_proxy_none">بدون پروکسی</string>
   <string name="settings_heading_chat">گپ</string>
   <string name="settings_gibberbot_connected">حساب ChatSecure وصل شد</string>
   <string name="settings_heading_panic_action">حالت هراس</string>
