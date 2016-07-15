@@ -20,38 +20,50 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/grey_dark" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/llManualAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:background="@drawable/search_field_background" >
 
-        <info.guardianproject.securereaderinterface.widgets.FocusNoHintEditText
-            android:id="@+id/editManualUrl"
-            style="@style/AddFeedUrlStyle"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/edit_text_background_selector"
-            android:ems="10"
-            android:hint="@string/add_feed_manual_hint"
-            android:imeOptions="actionDone"
-            android:inputType="textUri"
-            android:textAppearance="?android:attr/textAppearanceSmall" >
-
-        </info.guardianproject.securereaderinterface.widgets.FocusNoHintEditText>
-
         <Button
             android:id="@+id/btnAddManualUrl"
             style="@style/AddButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_margin="5dp"
             android:text="@string/add_feed_add" />
 
-    </LinearLayout>
+        <info.guardianproject.securereaderinterface.widgets.UrlInputEditText
+            android:id="@+id/editManualUrl"
+            style="@style/AddFeedUrlStyle"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@id/btnAddManualUrl"
+            android:layout_toStartOf="@id/btnAddManualUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@null"
+            android:ems="10"
+            android:hint="@string/add_feed_manual_hint"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine|textWebEmailAddress"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:minLines="1"
+            android:maxLines="8"
+            android:scrollHorizontally="false"
+            android:layout_gravity="left|top"
+            android:gravity="left|top">
+
+        </info.guardianproject.securereaderinterface.widgets.UrlInputEditText>
+
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/listFeeds"

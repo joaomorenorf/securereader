@@ -2,13 +2,22 @@ package info.guardianproject.securereaderinterface.widgets;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.PatternMatcher;
+import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
+import android.util.Patterns;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.EditText;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This is a variation of the EditText class that will hide the hint text when it has
@@ -18,24 +27,24 @@ import android.widget.EditText;
  * by calling {@link #setHintRelativeSize(float)}.
  *
  */
-public class FocusNoHintEditText extends EditText
+public class UrlInputEditText extends EditText
 {
 	private CharSequence mHint;
 	private float mHintRelativeSize = 1.0f;
-	
-	public FocusNoHintEditText(Context context)
+
+	public UrlInputEditText(Context context)
 	{
 		super(context);
 		init();
 	}
 
-	public FocusNoHintEditText(Context context, AttributeSet attrs)
+	public UrlInputEditText(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 		init();
 	}
 
-	public FocusNoHintEditText(Context context, AttributeSet attrs, int defStyle)
+	public UrlInputEditText(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
 		init();
@@ -71,6 +80,21 @@ public class FocusNoHintEditText extends EditText
 	{
 		mHint = getHint();
 		setAndResizeHint();
+		InputFilter filter = new InputFilter() {
+			@Override
+			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+				// Is result ok?
+				SpannableStringBuilder ssb = new SpannableStringBuilder(dest);
+				ssb.replace(dstart, dend, source, start, end);
+
+				Matcher m = Patterns.WEB_URL.matcher(ssb.toString());
+				if (!m.matches() && !m.hitEnd()) {
+					return "";
+				}
+				return null;
+			}
+		};
+		setFilters(new InputFilter[] { filter });
 	}
 
 	private void setAndResizeHint()
