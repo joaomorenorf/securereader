@@ -100,11 +100,14 @@ BBG will make every effort to review and post comments within 48 hours, although
   <string name="menu_receive_share">دریافت</string>
   <string name="menu_tor_connected">به تور متصل است</string>
   <string name="menu_tor_not_connected">به تور متصل نیست</string>
+  <string name="menu_psiphon_connected">به سایفون وصل شده</string>
+  <string name="menu_psiphon_not_connected">به سایفون وصل نشده</string>
   <string name="menu_num_feeds">%1$d خوراک</string>
   <string name="menu_num_stories">%1$d نوشته</string>
   <string name="menu_num_chats">%1$d گپ</string>
   <string name="menu_num_downloads">%1$d مورد</string>
   <string name="menu_preferences">تنظیمات</string>
+  <string name="menu_lock_app">اپ را قفل کن</string>
   <string name="story_item_short_author">از %1s</string>
   <string name="story_item_short_published_never"></string>
   <string name="story_item_short_published_recently">کمتر از یک دقیقه پیش</string>
@@ -144,6 +147,7 @@ BBG will make every effort to review and post comments within 48 hours, although
   <string name="settings_heading_proxy">پروکسی</string>
   <string name="settings_tor_require">نیاز به تور</string>
   <string name="settings_proxy_tor">تور</string>
+  <string name="settings_proxy_psiphon">سایفون</string>
   <string name="settings_proxy_none">بدون پروکسی</string>
   <string name="settings_heading_chat">گپ</string>
   <string name="settings_gibberbot_connected">حساب ChatSecure وصل شد</string>
