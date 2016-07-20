@@ -36,7 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/llSender"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_toRightOf="@id/llSender"
+            android:layout_toEndOf="@id/llSender"
             android:text="@string/httpd_app_sender_sender"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/button_primary" />
@@ -46,8 +48,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tvSender"
+            android:layout_alignStart="@id/tvSender"
             android:layout_below="@id/tvSender"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:text="@string/httpd_app_sender_sender_title"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -57,8 +61,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tvSenderTitle"
+            android:layout_alignStart="@id/tvSenderTitle"
             android:layout_below="@id/tvSenderTitle"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@string/httpd_app_sender_sender_part1"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -78,7 +84,9 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/llReceiver"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_toRightOf="@id/llReceiver"
+            android:layout_toEndOf="@id/llReceiver"
             android:text="@string/httpd_app_sender_receiver"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/button_primary" />
@@ -88,8 +96,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tvReceiver"
+            android:layout_alignStart="@id/tvReceiver"
             android:layout_below="@id/tvReceiver"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:orientation="vertical" >
 
             <TextView
@@ -105,6 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/httpd_app_sender_receiver_part2"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
