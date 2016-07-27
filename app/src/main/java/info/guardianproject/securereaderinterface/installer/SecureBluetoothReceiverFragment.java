@@ -59,6 +59,7 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 	public static final String LOGTAG = "SBReceiverFragment";
 	public static final boolean LOGGING = false;
 	public static final int ACCESS_LOCATION_PERMISSION_REQUEST = 0;
+	private boolean mHasRequestedPermission;
 
 	private enum UIState
 	{
@@ -112,9 +113,11 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 
 				} else {
 
-					Toast.makeText(this.getActivity(), "Sorry, we can not use Bluetooth without location permission", Toast.LENGTH_LONG);
+					Toast.makeText(this.getActivity(), "Sorry, we can not use Bluetooth without location permission", Toast.LENGTH_LONG).show();
 					// permission denied, boo! Disable the
 					// functionality that depends on this permission.
+					if (mDialog != null)
+						mDialog.dismiss();
 				}
 				return;
 			}
@@ -129,6 +132,8 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 		// Start by trying to receive
 		if (!sb.isEnabled())
 			sb.enableBluetooth(getActivity());
+		else if (mDialog != null)
+			mDialog.show();
 
 		//sb.enableDiscovery(getActivity());
 		receiveButton.performClick();
@@ -184,18 +189,18 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
 		mDialog = super.onCreateDialog(savedInstanceState);
-//		mDialog.setOnShowListener(new OnShowListener()
-//		{
-//			@Override
-//			public void onShow(DialogInterface dialog)
-//			{
-//				// If BT not enabled, hide us for now. We will prompt the user to enable
-//				// BT and handle the result in onUnlockedActivityResult. Based on the
-//				// user's choice the dialog will either be dismissed or shown there.
-//				if (!sb.isEnabled())
-//					mDialog.hide();
-//			}
-//		});
+		mDialog.setOnShowListener(new OnShowListener()
+		{
+			@Override
+			public void onShow(DialogInterface dialog)
+			{
+				// If BT not enabled, hide us for now. We will prompt the user to enable
+				// BT and handle the result in onUnlockedActivityResult. Based on the
+				// user's choice the dialog will either be dismissed or shown there.
+				if (sb == null || !sb.isEnabled())
+					mDialog.hide();
+			}
+		});
 		return mDialog;
 	}
 
@@ -212,7 +217,8 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 	{
 		if (LOGGING) 
 		Log.v(LOGTAG,"onStop");
-		sb.disconnect();
+		if (sb != null)
+			sb.disconnect();
 		unregisterReceiver();
 		super.onStop();
 	}
@@ -224,19 +230,18 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 		super.onResume();
 		updateUi();
 
-		int permissionCheck = ContextCompat.checkSelfPermission(this.getActivity(),
-				Manifest.permission.ACCESS_FINE_LOCATION);
+		if (!mHasRequestedPermission) {
+			mHasRequestedPermission = true;
+			int permissionCheck = ContextCompat.checkSelfPermission(this.getActivity(),
+					Manifest.permission.ACCESS_FINE_LOCATION);
 
-		if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-
-			ActivityCompat.requestPermissions(this.getActivity(),
-					new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-					ACCESS_LOCATION_PERMISSION_REQUEST);
-
-		} else {
-			startBluetooth();
+			if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+				requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						ACCESS_LOCATION_PERMISSION_REQUEST);
+			} else {
+				startBluetooth();
+			}
 		}
-
 	}
 
 	private void updateUi()
@@ -276,7 +281,7 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 	@Override
 	public void onClick(View clickedView)
 	{
-		if (clickedView == receiveButton)
+		if (clickedView == receiveButton && sb != null)
 		{
 			sb.enableDiscovery(getActivity());
 			sb.listen();
