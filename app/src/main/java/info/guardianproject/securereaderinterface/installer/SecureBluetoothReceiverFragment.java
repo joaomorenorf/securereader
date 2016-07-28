@@ -170,6 +170,7 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 			{
 				if (mItemReceived != null)
 				{
+					dismiss();
 					Intent intent = new Intent(v.getContext(), MainActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					intent.putExtra(MainActivity.INTENT_EXTRA_SHOW_THIS_ITEM, mItemReceived.getDatabaseId());
@@ -288,7 +289,7 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 			this.updateBasedOnScanMode(sb.btAdapter.getScanMode());
 			if (LOGGING)
 				Log.v(LOGTAG, "listen called, ready to receive");
-			receiveButton.setEnabled(false);
+			//receiveButton.setEnabled(false);
 		}
 	}
 
