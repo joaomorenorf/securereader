@@ -349,6 +349,7 @@ public class SecureBluetoothSenderFragment extends DialogFragment implements Loc
 				sb.btAdapter.cancelDiscovery();
 			}
 			sb.disconnect();
+			sb.setSecureBluetoothEventListener(null);
 		}
 		showScanningSpinner(false);
 		getActivity().unregisterReceiver(receiver);
@@ -428,7 +429,6 @@ public class SecureBluetoothSenderFragment extends DialogFragment implements Loc
 					if (LOGGING)
 						Log.v(LOGTAG,"bytes sent now: " + bytesRead + " " + lengthSent + " total: " + lengthTotal);
 				}
-									
 				setStatusText(R.string.bluetooth_send_sent_item);
 				setUiState(UIState.SentOk);
 			}
@@ -467,7 +467,7 @@ public class SecureBluetoothSenderFragment extends DialogFragment implements Loc
 	@Override
 	public void onClick(View clickedView)
 	{
-		if (clickedView == scanButton)
+		if (clickedView == scanButton && sb != null)
 		{
 			mNewDevicesArrayAdapter.clear();
 			showScanningSpinner(true);
