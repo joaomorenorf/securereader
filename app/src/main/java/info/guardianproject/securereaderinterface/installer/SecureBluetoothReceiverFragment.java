@@ -218,8 +218,10 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 	{
 		if (LOGGING) 
 		Log.v(LOGTAG,"onStop");
-		if (sb != null)
+		if (sb != null) {
 			sb.disconnect();
+			sb.setSecureBluetoothEventListener(null);
+		}
 		unregisterReceiver();
 		super.onStop();
 	}
@@ -334,112 +336,108 @@ public class SecureBluetoothReceiverFragment extends DialogFragment implements L
 			if (LOGGING)
 			Log.v(LOGTAG, "Got a disconnect, " + bytesReceived + " bytes received");
 
-			try
-			{
-				bos.close();
-				
-				ArrayList<File> mediaFiles = new ArrayList<File>();
-				
-				// Now unzip it
-				ZipFile zipFile = new ZipFile(receivedContentBundleFile);
+			if (mCurrentState == UIState.Receiving) {
+				try {
+					bos.close();
+					bos = null;
 
-				Item receivedItem = null;
+					ArrayList<File> mediaFiles = new ArrayList<File>();
 
-				for(Enumeration<? extends ZipEntry> entries = zipFile.entries(); entries.hasMoreElements();) 
-				{
-					ZipEntry currentEntry = entries.nextElement();
+					// Now unzip it
+					ZipFile zipFile = new ZipFile(receivedContentBundleFile);
 
-					if (LOGGING)
-						Log.v(LOGTAG, "Found: " + currentEntry.getName());
+					Item receivedItem = null;
 
-					if (currentEntry.getName().contains(SocialReader.CONTENT_ITEM_EXTENSION)) 
-					{
-						if (LOGGING)
-							Log.v(LOGTAG, "Parsing " + currentEntry.getName());
-
-						InputStream inputStream = zipFile.getInputStream(currentEntry);
-
-						Feed incomingFeed = new Feed(inputStream);
-						Reader feedReader = new Reader(App.getInstance().socialReader,incomingFeed);
-						incomingFeed = feedReader.fetchFeed();
-
-
-
-						// Looping through but ...
-						for (int i = 0; i < incomingFeed.getItemCount(); i++) {
-
-							receivedItem = incomingFeed.getItem(i);
-							//objectInputStream.close();
-							if (LOGGING)
-								Log.v(LOGTAG, "We have an Item!!!");
-							mItemReceived = receivedItem;
-							receivedItem.setShared(true);
-							receivedItem.setDatabaseId(Item.DEFAULT_DATABASE_ID);
-							receivedItem.setFeedId(Feed.DEFAULT_DATABASE_ID);
-							for (MediaContent mc : receivedItem.getMediaContent()) {
-								mc.setDatabaseId(MediaContent.DEFAULT_DATABASE_ID);
-							}
-							if (LOGGING) {
-								Log.v(LOGTAG, "getGuid: " + receivedItem.getGuid());
-								Log.v(LOGTAG, "getFeedId: " + receivedItem.getFeedId());
-							}
-							// Add it in..
-							App.getInstance().socialReader.setItemData(receivedItem);
-						}
-					} else { // Ignore for now, we'll loop through again in a second
-						if (LOGGING)
-						Log.v(LOGTAG,"Ignoring media element for now");
-					}
-				}
-				
-				if (receivedItem != null) {
-					int mediaContentCount = 0;
-					for(Enumeration<? extends ZipEntry> entries = zipFile.entries(); entries.hasMoreElements();) 
-					{
+					for (Enumeration<? extends ZipEntry> entries = zipFile.entries(); entries.hasMoreElements(); ) {
 						ZipEntry currentEntry = entries.nextElement();
-						if (currentEntry.getName().contains(SocialReader.CONTENT_ITEM_EXTENSION)) 
-						{
-							// Ignore it, we should already have it
-							
-						} else {  
-							
-							// It's Media Content
-							// Save the files in the normal place
-							
+
+						if (LOGGING)
+							Log.v(LOGTAG, "Found: " + currentEntry.getName());
+
+						if (currentEntry.getName().contains(SocialReader.CONTENT_ITEM_EXTENSION)) {
+							if (LOGGING)
+								Log.v(LOGTAG, "Parsing " + currentEntry.getName());
+
 							InputStream inputStream = zipFile.getInputStream(currentEntry);
-							BufferedOutputStream bos = null;
-							
-							MediaContent mediaContent = receivedItem.getMediaContent(mediaContentCount);
-							mediaContentCount++;
-							
-							File savedFile = new File(App.getInstance().socialReader.getFileSystemDir(), SocialReader.MEDIA_CONTENT_FILE_PREFIX + mediaContent.getDatabaseId());
-							bos = new BufferedOutputStream(new FileOutputStream(savedFile));
-							
-							byte buffer[] = new byte[1024];
-							int count;
-							while ((count = inputStream.read(buffer)) != -1)
-							{
-								bos.write(buffer, 0, count);
+
+							Feed incomingFeed = new Feed(inputStream);
+							Reader feedReader = new Reader(App.getInstance().socialReader, incomingFeed);
+							incomingFeed = feedReader.fetchFeed();
+
+
+							// Looping through but ...
+							for (int i = 0; i < incomingFeed.getItemCount(); i++) {
+
+								receivedItem = incomingFeed.getItem(i);
+								//objectInputStream.close();
+								if (LOGGING)
+									Log.v(LOGTAG, "We have an Item!!!");
+								mItemReceived = receivedItem;
+								receivedItem.setShared(true);
+								receivedItem.setDatabaseId(Item.DEFAULT_DATABASE_ID);
+								receivedItem.setFeedId(Feed.DEFAULT_DATABASE_ID);
+								for (MediaContent mc : receivedItem.getMediaContent()) {
+									mc.setDatabaseId(MediaContent.DEFAULT_DATABASE_ID);
+								}
+								if (LOGGING) {
+									Log.v(LOGTAG, "getGuid: " + receivedItem.getGuid());
+									Log.v(LOGTAG, "getFeedId: " + receivedItem.getFeedId());
+								}
+								// Add it in..
+								App.getInstance().socialReader.setItemData(receivedItem);
 							}
-							inputStream.close();
-							bos.close();						
+						} else { // Ignore for now, we'll loop through again in a second
+							if (LOGGING)
+								Log.v(LOGTAG, "Ignoring media element for now");
 						}
 					}
-				}
-				else {
-					if (LOGGING)
-					Log.e(LOGTAG,"Didn't get an item");
-				}
-				
 
+					if (receivedItem != null) {
+						int mediaContentCount = 0;
+						for (Enumeration<? extends ZipEntry> entries = zipFile.entries(); entries.hasMoreElements(); ) {
+							ZipEntry currentEntry = entries.nextElement();
+							if (currentEntry.getName().contains(SocialReader.CONTENT_ITEM_EXTENSION)) {
+								// Ignore it, we should already have it
+
+							} else {
+
+								// It's Media Content
+								// Save the files in the normal place
+
+								InputStream inputStream = zipFile.getInputStream(currentEntry);
+								BufferedOutputStream bos = null;
+
+								MediaContent mediaContent = receivedItem.getMediaContent(mediaContentCount);
+								mediaContentCount++;
+
+								File savedFile = new File(App.getInstance().socialReader.getFileSystemDir(), SocialReader.MEDIA_CONTENT_FILE_PREFIX + mediaContent.getDatabaseId());
+								bos = new BufferedOutputStream(new FileOutputStream(savedFile));
+
+								byte buffer[] = new byte[1024];
+								int count;
+								while ((count = inputStream.read(buffer)) != -1) {
+									bos.write(buffer, 0, count);
+								}
+								inputStream.close();
+								bos.close();
+							}
+						}
+					} else {
+						if (LOGGING)
+							Log.e(LOGTAG, "Didn't get an item");
+					}
+
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				receivedContentBundleFile = null;
+				readyToReceive = false;
 			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (mItemReceived != null)
+			if (mItemReceived != null) {
 				setUiState(UIState.ReceivedOk);
+			}
 			else
 				setUiState(UIState.Listening);
 		}

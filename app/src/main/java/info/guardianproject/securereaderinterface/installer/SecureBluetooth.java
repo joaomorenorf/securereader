@@ -685,13 +685,14 @@ public class SecureBluetooth
 			{
 				try
 				{
-					socket.close();
-					if (LOGGING)
-						Log.v(LOGTAG, "Closed socket");
+					if (socket != null) {
+						socket.close();
+						if (LOGGING)
+							Log.v(LOGTAG, "Closed socket");
 
-					Message msg = eventHandler.obtainMessage(EVENT_DISCONNECTED);
-					eventHandler.sendMessage(msg);
-
+						Message msg = eventHandler.obtainMessage(EVENT_DISCONNECTED);
+						eventHandler.sendMessage(msg);
+					}
 				}
 				catch (IOException e)
 				{
